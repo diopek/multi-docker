@@ -6,7 +6,7 @@ before_install:
   - docker build -t diopek/react-test -f ./client/Dockerfile.dev ./client
 
 script:
-  - docker run diopek/react-test npm test -- --coverage
+  - ddocker run -e CI=true diopek/react-test npm test
 
 after_success:
   - docker build -t diopek/multi-client ./client
