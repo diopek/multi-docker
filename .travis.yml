@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t diopek/react-test -f ./client/Dockerfile.dev ./client
+# normall npm test never exits, to exit we use -- --coverage
+script:
+  - docker run diopek/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t diopek/multi-client ./client
+  - docker build -t diopek/multi-nginx ./nginx
+  - docker build -t diopek/multi-server ./server
+  - docker build -t diopek/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push diopek/multi-client
+  - docker push diopek/multi-nginx
+  - docker push diopek/multi-server
+  - docker push diopek/multi-worker
