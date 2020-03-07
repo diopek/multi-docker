@@ -5,7 +5,6 @@ services:
 before_install:
   - docker build -t diopek/react-test -f ./client/Dockerfile.dev ./client
 
-# normall npm test never exits, to exit we use -- --coverage
 script:
   - docker run diopek/react-test npm test -- --coverage
 
